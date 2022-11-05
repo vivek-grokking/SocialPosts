@@ -1,4 +1,15 @@
-@app.get("/posts",
+from fastapi import Depends, Response, status, HTTPException, APIRouter
+from sqlalchemy.orm import Session
+from ..database import get_db
+from typing import List
+from .. import models, schemas
+
+router = APIRouter(
+    prefix = "/posts",
+    tags = ['Posts']
+)
+
+@router.get("/",
         response_model = List[schemas.Post])
 def get_posts(db: Session = Depends(get_db)):
     # cursor.execute(""" SELECT * FROM posts;  """)
@@ -6,7 +17,7 @@ def get_posts(db: Session = Depends(get_db)):
     posts = db.query(models.Post).all()
     return posts
 
-@app.post("/posts", status_code = status.HTTP_201_CREATED, 
+@router.post("/", status_code = status.HTTP_201_CREATED, 
                     response_model = schemas.Post)
 def create_posts(post: schemas.PostCreate, 
                  db: Session = Depends(get_db)):
@@ -22,7 +33,7 @@ def create_posts(post: schemas.PostCreate,
 
     return new_post
 
-@app.get("/posts/{id}")
+@router.get("/{id}")
 def get_post(id: int, 
              db: Session = Depends(get_db)): # adding "int" to input param provides type-validation
     # cursor.execute(""" SELECT * FROM posts WHERE id = %s ;""", (str(id),)) # trailing comma after str(id) is important
@@ -34,7 +45,7 @@ def get_post(id: int,
                 detail = f"post with id {id} was not found")
     return post
 
-@app.delete("/posts/{id}")
+@router.delete("/{id}")
 def delete_post(id: int, 
                 db: Session = Depends(get_db)):
     # cursor.execute(""" DELETE FROM posts WHERE id = %s RETURNING * ; """, (str(id),))
@@ -50,7 +61,7 @@ def delete_post(id: int,
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
-@app.put("/posts/{id}",
+@router.put("/{id}",
         response_model = schemas.Post)
 def update_post(id: int, 
                 post: schemas.PostCreate, 
