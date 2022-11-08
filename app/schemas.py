@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
+from typing import Optional
 
 # pydantic model for schema
 # they define the shape of the request / response objects
@@ -33,4 +34,11 @@ class UserOut(BaseModel):
 
 class UserLogin(BaseModel):
     email: EmailStr
-    password: str        
+    password: str
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    id: Optional[str]: None

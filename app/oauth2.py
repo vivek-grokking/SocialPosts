@@ -1,6 +1,6 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
-
+from . import schemas
 
 # SECRET KEY
 # algo - HS256
@@ -17,3 +17,10 @@ def create_access_token(data: dict):
 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm = ALGORITHM)
     return encoded_jwt
+
+def verify_access_token(token: str, credentials_exception):
+    payload = jwt.decode(token, SECRET_KEY, algorithm = ALGORITHM)
+    id: str = payload.get("user_id")
+    if id is None:
+        raise credentials_exception
+    token_data = schemas.TokenData(id = id)
