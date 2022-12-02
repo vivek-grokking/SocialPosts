@@ -16,6 +16,9 @@ class Post(Base):
                         server_default = text('now()'))
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable = False)
 
+    # sqlalchemy creates the 'owner' property for us and figures out the DB relation itself
+    owner = relationship("User")
+
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key = True, nullable = False)
