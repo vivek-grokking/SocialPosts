@@ -1,5 +1,5 @@
 from .routers import post, user, auth
-from . import models, schemas, utils
+from . import models
 from .database import engine
 from fastapi import FastAPI
 
@@ -14,4 +14,4 @@ app.include_router(auth.router)
 
 @app.get("/")
 def hello_world():
-    return {"message": "Welcome to best Social Media application in the world ! :)"}
+    return {"message": "Hello there !)"}
